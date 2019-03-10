@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h4>
+      过程与数据的结合是形容面向对象中的“对象”经常使用的表达式，对象以方法的形式包含了过程，二闭包在是在过程中以环境的形式包含了数据，通常用面向对象能够实现的功能
+      通过闭包能够实现，反之亦然。
+    </h4>
+    <div>
+      这里以面向对象和闭包的⑩例来了解他们的特点
+    </div>
+    <h6>闭包相关的代码,一下示例通过闭包延续了局部变量value的生命</h6>
+    <pre>
+      <code>
+
+      var extent = function () {
+        var value = 0;
+        return {
+          call: function () {
+            value++
+            console.log(value)
+          }
+        }
+      }
+      var extent = extent()
+      extent.call() // 1
+      extent.call() // 2
+      extent.call() // 3
+      </code>
+    </pre>
+    <h6>面向对象相关的代码, 对象字面量的写法</h6>
+    <pre>
+      <code>
+
+      var extent = {
+        value: 0,
+        call: function () {
+          this.value++
+          console.log(this.value)
+        }
+      }
+      extent.call() // 1
+      extent.call() // 2
+      extent.call() // 3
+      </code>
+    </pre>
+    <h6>面向对象相关的代码, 工厂函数的写法</h6>
+    <pre>
+    <code>
+
+    var Extent = function () {
+      this.vaule = 0
+    }
+
+    Extent.prototype.call = function () {
+      this.value++
+      console.log(this.value)
+    }
+    var extent = new Extent()
+    extent.call() // 1
+    extent.call() // 2
+    extent.call() // 3
+    </code>
+    </pre>
+  </body>
+</html>

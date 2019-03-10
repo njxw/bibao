@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <style >
+      div{
+        display:inline-block;
+        width: 60px;
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid red;
+        text-align:center;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>
+        需求： 假设页面上有5个div节点，通过循环来给每一个div绑定onclick事件，点击div时弹出对应的索引
+    </h3>
+    <h4>此处点击每一个div都会弹出5,因为事件是异步触发的，事件触发的时候循环早就完成了，变量i此时为5，所以弹出的总是5</h4>
+    <pre>
+      <code>
+
+        <xmp>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        </xmp>
+        var divs = document.querySelectorAll('div')
+
+        for (var i = 0, len=divs.length;i < len; i++) {
+          divs[i].onclick = function () {
+
+            alert(i)
+          }
+        }
+      </code>
+    </pre>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+
+    <script type="text/javascript">
+      var divs = document.querySelectorAll('div')
+
+      for (var i = 0, len=divs.length;i < len; i++) {
+        divs[i].onclick = function () {
+
+          alert(i)
+        }
+      }
+    </script>
+
+    <h4>此处用闭包结构来保存每次循环中的i,绑定事件后每次弹出来的都是不同的下标</h4>
+    <pre>
+      <code>
+
+        <xmp>
+        <div class="bibao">1</div>
+        <div class="bibao">2</div>
+        <div class="bibao">3</div>
+        <div class="bibao">4</div>
+        <div class="bibao">5</div>
+        </xmp>
+        var nodes = document.querySelectorAll('.bibao')
+
+        for (var i = 0, len=nodes.length;i < len; i++) {
+          (function (i) {
+
+            nodes[i].onclick = function () {
+
+              alert(i)
+            }
+          })(i)
+
+        }
+      </code>
+    </pre>
+    <div class="bibao">1</div>
+    <div class="bibao">2</div>
+    <div class="bibao">3</div>
+    <div class="bibao">4</div>
+    <div class="bibao">5</div>
+    <script type="text/javascript">
+      var nodes = document.querySelectorAll('.bibao')
+      for (var i = 0, len=nodes.length;i < len; i++) {
+        (function (i) {
+
+          nodes[i].onclick = function () {
+
+            alert(i)
+          }
+        })(i)
+
+      }
+    </script>
+  </body>
+</html>

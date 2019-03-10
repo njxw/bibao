@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h4>闭包可以封装变量,可以延续局部变量的寿命</h4>
+    <div>
+      闭包可以帮助吧不需要暴露在全局的变量封装成私有变量，如下有一个求乘积函数，通过闭包如何来包装他
+    </div>
+    <pre>
+      <code>
+        var mult = function () {
+          var a = 1
+          for (var i = 0, l = arguments.length; i < l ; i++) {
+            a = a*arguments[i]
+          }
+
+          return a
+        }
+        console.log(mult(1,2,3)) // 得到6
+      </code>
+    </pre>
+    <div>
+      上面求乘积的写法性能不高，因此对于那些参数相同的计算，每次都要重新计算，因此可以增加缓存来提高该函数的性能
+    </div>
+    <pre>
+      <code>
+        var cache = {}
+        var mult = function () {
+          var args = Array.prototype.join.call(arguments, ',') // 将参数用，连接起来
+          if (cache[args]) {
+            return cache[args]
+          }
+          var a = 1
+          for (var i = 0, l = arguments.length; i < l ; i++) {
+            a = a*arguments[i]
+          }
+
+          return cache[args] = a
+        }
+        console.log(mult(1,2,3)) // 得到6
+        console.log(mult(1,2,3)) // 得到6
+      </code>
+    </pre>
+
+    <div>
+      上面求乘积的虽然加了缓存提高了性能，但是还有优化的空间，因为cache是被定义在全局的，但是他只在mult中有使用，与其将他和mult一起暴露在全局，还不如把他封装到mult内部
+    </div>
+  </div>
+  <pre>
+    <code>
+      var mult = (function () {
+        var cache = {}
+
+        return function () {
+          var args = Array.prototype.join.call(arguments, ',')
+          if (cache[args]) {
+            return cache[args]
+          }
+          var a = 1
+          for (var i =0, l = arguments.length; i < l; i++) {
+            a = a* arguments[i]
+          }
+
+          return cache[args] = a
+        }
+      })()
+
+      console.log(mult(1,2,3)) // 得到6
+      console.log(mult(1,2,3)) // 得到6
+    </code>
+  </pre>
+  <div>
+    上面使用闭包优化了乘积函数，仔细发现还可以进行优化，就是通过提炼函数的方式，计算乘积的那部分逻辑是不变的，因此可以将其封装为函数calculate
+  </div>
+  <pre>
+    <code>
+      var mult = (function () {
+        var cache = {}
+        var calculate = function () {
+          var a = 1
+          for (var i =0, l = arguments.length; i < l; i++) {
+            a = a* arguments[i]
+          }
+          return a
+        }
+        return function () {
+          var args = Array.prototype.join.call(arguments, ',')
+          if (cache[args]) {
+            return cache[args]
+          }
+
+          return cache[args] = calculate.apply(null,arguments)
+        }
+      })()
+
+      console.log(mult(1,2,3)) // 得到6
+      console.log(mult(1,2,3)) // 得到6
+    </code>
+  </pre>
+
+  <script type="text/javascript">
+    var mult = (function (){
+      var cache = {}
+      var calculate = function () {
+        var a = 1
+        for (var i =0, l = arguments.length; i < l ; i++) {
+          a = a* arguments[i]
+        }
+        return a
+      }
+
+      return function () {
+        var args = Array.prototype.join.call(arguments, ',')
+        if (cache[args]) {
+          return cache[args]
+        }
+
+        return cache[args] = calculate.apply(null, arguments)
+      }
+    })()
+
+    console.log(mult(1,2,3))
+
+    // AOP
+    Function.prototype.before = function (beforefn) {
+      var _this = this
+      console.log('beforefn',beforefn,'TTT', Array.prototype.join.call(arguments, ','))
+      return function () { // 返回一个代理函数
+
+        console.log('arguments',  Array.prototype.join.call(arguments, ','))
+        beforefn.apply(this, arguments) // 执行新函数，修正this
+        return _this.apply(this, arguments) // 执行原函数, 原函数可能是有返回值得，因此代理函数执行原函数的时候，要将原函数的返回值返回出去
+      }
+    }
+
+
+    var func = function () {
+      console.log(2)
+      return 'abc'
+    }
+    func = func.before(function () { // 不能显式的接收call和apply传过来的值，如果要显示的接，那么写几个参数就会接收几个值
+      console.log('d is ', Array.prototype.join.call(arguments, ','))
+      console.log(1)
+    })
+
+    console.log('返回值是设么',func(2, 1))
+  </script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+display: table-cell; 该布局让元素和表格的td布局一样，我们知道单元格有一些比较特别的特性，垂直居中，关联伸缩等，
+尽量不要与float:left; position:absolute;等同用，table-cell对元素宽度和高度敏感，对margin无反应，响应padding,就是一个活脱脱的td
+
+
+父元素设置了display:flex;那么子元素的宽度在不设置的情况下，是字体撑开的。

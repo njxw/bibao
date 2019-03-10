@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+
+
+    <h3>了解变量的作用域和生存周期</h3>
+
+    <script type="text/javascript">
+      /**
+        变量的作用域：
+            所谓变量的作用域就是指变量的有效范围，一般都是相对函数来说的，（除了es6等具有块级作用域的特殊情况，）
+            常见的情况有如下几种：
+            1. 在函数外部用var声明的变量为全局变量
+            2. 在函数内部用var声明的变量为局部变量，局部变量只有在函数内部才能被访问到，
+            3. 在函数内部没有用var声明的变量，为全局变量。这很容易造成命名冲突
+      */
+      // 这里通过一个简单的例子来说明一下
+      var a = 1
+
+      var func1 = function () {
+        var b = 2
+        var func2 = function () {
+          var c = 3
+          console.log(a)
+          console.log(c)
+        }
+        func2()
+        //  console.log(c) // 这里会报错，因为在func1的作用域中没有声明c变量
+
+      }
+      func1()
+
+
+      /***
+      * 变量的生存周期：
+      * 变量的生存周期一般在作用域范围内有效，也就是说声明在函数中的变量只有在函数调用中生效，函数调用结束就会被销毁
+      * 但是有一种情况下，局部变量是不会被销毁的，那就是在闭包中，闭包简单来说就是一个封闭的环境但是却可以提供变量给外界使用
+      *
+      *
+      ********/
+
+      // 这里通过一个例子来了解一下变量的生存周期
+
+      var func3 = function () {
+        var a = 1 // 这里的局部变量a在函数调用结束后就会销毁
+        console.log(a)
+      }
+      func3()
+
+      var func4 = function () {
+        var a = 1
+        return function () {
+          a++
+          console.log(a)
+        }
+      }
+
+      var f = func4() // 返回了一个函数，返回的函数被全局接收了
+      f() // 2
+      f() // 3
+      f() // 4
+      // 上面的调用可以看出在func4里面声明的变量a,在func4调用结束后还能被访问，a的声明被延续了，这也是闭包的一个特性
+    </script>
+  </body>
+</html>

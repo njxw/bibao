@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h3>命令模式的意图是把请求封装成对象，从而分离请求的发起者和请求的接受者</h3>
+    <div>
+      这里是最简单的需求说明，打开电视和关闭电视，简单分析下，打开电视和关闭电视可视作是两个请求，请求的发起者是点击打开和关闭的按钮事件，事件发生了才有请求，请求的接受者
+      就是等待命令这行操作的对象
+    </div>
+    <div>
+      此处以面向对象的方式来实现命令模式
+
+    </div>
+    <pre>
+      <xmp>
+        <button type="button" name="button" id="excute">打开电视</button>
+        <button type="button" name="button" id="undo">关闭电视</button>
+      </xmp>
+      <code>
+      // 将请求封装为对象Tv
+      var Tv = {
+        open: function () {
+          console.log('open...')
+        },
+        close: function () {
+          console.log('close...')
+        }
+      }
+
+      // 设置命令的接受者(接受者要有一定的能力，执行命令的能力)
+      var OpenTvCommond = function (reciver) {
+        this.reciver = reciver
+      }
+      OpenTvCommond.protoptype.excute = function () { // 具备打开电视的能力
+        this.reciver.open()
+      }
+      OpenTvCommond.protoptype.undo = function () { // 具备关闭电视的能力
+        this.reciver.close()
+      }
+
+      // 设置命令的发起者(要发出一条命令)
+      var setCommond = function (commond) {
+        document.getElementById('excute').onclick = function () {
+          commond.excute()
+        }
+        document.getElementById('undo').onclick = function () {
+          commond.undo()
+        }
+      }
+
+      setCommond(new OpenTvCommond(Tv))
+      </code>
+    </pre>
+    <button type="button" name="button" id="excute">打开电视</button>
+    <button type="button" name="button" id="undo">关闭电视</button>
+    <script type="text/javascript">
+      // 将请求封装为对象Tv
+      var Tv = {
+        open: function () {
+          console.log('open...')
+        },
+        close: function () {
+          console.log('close...')
+        }
+      }
+
+      // 设置命令的接受者(接受者要有一定的能力，执行命令的能力)
+      var OpenTvCommond = function (reciver) {
+        this.reciver = reciver
+      }
+      OpenTvCommond.protoptype.excu = function () { // 具备打开电视的能力
+        this.reciver.open()
+      }
+      OpenTvCommond.protoptype.undo = function () { // 具备关闭电视的能力
+        this.reciver.close()
+      }
+
+      // 设置命令的发起者(要发出一条命令)
+      var setCommond = function (commond) {
+        document.getElementById('excute').onclick = function () {
+          commond.excu()
+        }
+        document.getElementById('undo').onclick = function () {
+          commond.undo()
+        }
+      }
+
+      setCommond(new OpenTvCommond(Tv))
+    </script>
+  </body>
+</html>
